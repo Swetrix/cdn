@@ -1,5 +1,5 @@
 import {
-  Controller, Post, UseInterceptors, UploadedFile, Delete, Body, HttpCode,
+  Controller, Post, UseInterceptors, UploadedFile, Delete, Body, HttpCode, Get, Param, StreamableFile,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiTags } from '@nestjs/swagger'
@@ -15,6 +15,11 @@ export class FileController {
   constructor(
     private readonly fileService: FileService,
   ) {}
+
+  @Get('/:id')
+  getFile(@Param('id') id: string) {
+    return this.fileService.getFile(id)
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('file', multerOptions))

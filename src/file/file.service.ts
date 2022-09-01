@@ -1,6 +1,6 @@
-import { Injectable, UnauthorizedException, InternalServerErrorException } from '@nestjs/common'
+import { Injectable, UnauthorizedException, InternalServerErrorException, StreamableFile } from '@nestjs/common'
 import { extname } from 'path'
-import { existsSync, mkdirSync } from 'fs'
+import { existsSync, mkdirSync, createReadStream } from 'fs'
 import { promises as fs } from 'fs'
 import * as crypto from 'crypto'
 
@@ -15,6 +15,12 @@ export class FileService {
       // TODO: Add rate limiting
       throw new UnauthorizedException('Invalid access token')
     }
+  }
+
+  async getFile(filename: string) {
+    const path = `${UPLOAD_PATH}/${filename}`
+    const file = createReadStream(path)
+    return new StreamableFile(file)
   }
 
   async saveFile(file: Express.Multer.File) {
