@@ -15,5 +15,6 @@ export class FileDeleteDTO {
     required: true,
     description: 'Filename you want to delete',
   })
+  @IsNotEmpty()
   filename: string
 }
