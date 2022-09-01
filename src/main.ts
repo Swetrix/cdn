@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { isNewRelicEnabled } from './common/constants'
 import { AppModule } from './app.module'
@@ -8,6 +9,16 @@ import { NewrelicInterceptor } from './common/interceptors/newrelic.interceptor'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.useGlobalPipes(new ValidationPipe())
+
+  if (process.env.NODE_ENV === 'development') {
+    const config = new DocumentBuilder()
+      .setTitle('Swetrix CDN')
+      .setDescription('Swetrix Content Delivery Network API')
+      .setVersion('1.0.0')
+      .build()
+    const document = SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup('api', app, document)
+  }
 
   if (isNewRelicEnabled && process.env.NODE_ENV !== 'development') {
     app.useGlobalInterceptors(new NewrelicInterceptor())
