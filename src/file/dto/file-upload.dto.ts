@@ -11,6 +11,5 @@ export class FileUploadDTO {
   token: string
 
   @ApiProperty()
-  @IsNotEmpty()
   file: Express.Multer.File
 }
