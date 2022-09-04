@@ -14,7 +14,7 @@ async function bootstrap() {
     const config = new DocumentBuilder()
       .setTitle('Swetrix CDN')
       .setDescription('Swetrix Content Delivery Network API')
-      .setVersion('1.0.0')
+      .setVersion(process.env.npm_package_version)
       .build()
     const document = SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('api', app, document)
