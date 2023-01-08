@@ -1,4 +1,6 @@
-import { Injectable, UnauthorizedException, InternalServerErrorException, StreamableFile } from '@nestjs/common'
+import {
+  Injectable, UnauthorizedException, InternalServerErrorException, StreamableFile, NotFoundException,
+} from '@nestjs/common'
 import { extname } from 'path'
 import { existsSync, mkdirSync, createReadStream } from 'fs'
 import { promises as fs } from 'fs'
@@ -19,8 +21,13 @@ export class FileService {
 
   async getFile(filename: string) {
     const path = `${UPLOAD_PATH}/${filename}`
-    const file = createReadStream(path)
-    return new StreamableFile(file)
+
+    try {
+      const file = createReadStream(path)
+      return new StreamableFile(file)
+    } catch (e) {
+      throw new NotFoundException('File not found')
+    }
   }
 
   async saveFile(file: Express.Multer.File) {
