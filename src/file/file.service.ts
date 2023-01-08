@@ -22,11 +22,15 @@ export class FileService {
   async getFile(filename: string) {
     const path = `${UPLOAD_PATH}/${filename}`
 
+    if (!existsSync(UPLOAD_PATH)) {
+      throw new NotFoundException('File not found')
+    }
+
     try {
       const file = createReadStream(path)
       return new StreamableFile(file)
     } catch (e) {
-      throw new NotFoundException('File not found')
+      console.error(`[ERROR]: An error happened while reading the file (${UPLOAD_PATH}/${filename}): ${e}`)
     }
   }
 
