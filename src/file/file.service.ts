@@ -22,7 +22,7 @@ export class FileService {
   async getFile(filename: string) {
     const path = `${UPLOAD_PATH}/${filename}`
 
-    if (!existsSync(UPLOAD_PATH)) {
+    if (!existsSync(path)) {
       throw new NotFoundException('File not found')
     }
 
