@@ -54,6 +54,32 @@ export class FileService {
     }
   }
 
+  async saveMultipleFiles(files: Express.Multer.File[]) {
+    const filenames = []
+
+    for (const file of files) {
+      const id = crypto.randomBytes(16).toString('hex')
+      const filename = `${id}${extname(file.originalname)}`
+      const path = `${UPLOAD_PATH}/${filename}`
+
+      filenames.push(filename)
+
+      if (!existsSync(UPLOAD_PATH)) {
+        mkdirSync(UPLOAD_PATH)
+      }
+
+      try {
+        await fs.writeFile(path, file.buffer, 'binary')
+      } catch (e) {
+        throw new InternalServerErrorException('An error happened while saving the file')
+      }
+    }
+
+    return {
+      filenames,
+    }
+  }
+
   async deleteFile(filename) {
     const path = `${UPLOAD_PATH}/${filename}`
 
