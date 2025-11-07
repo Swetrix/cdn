@@ -82,9 +82,12 @@ export class FileService {
     try {
       const file = createReadStream(path)
       return new StreamableFile(file)
-    } catch (e) {
+    } catch (reason) {
       console.error(
-        `[ERROR]: An error happened while reading the file (${UPLOAD_PATH}/${filename}): ${e}`,
+        `[ERROR]: An error happened while reading the file (${UPLOAD_PATH}/${filename}): ${reason}`,
+      )
+      throw new InternalServerErrorException(
+        'An error happened while reading the file',
       )
     }
   }
@@ -127,7 +130,7 @@ export class FileService {
 
       try {
         await fs.writeFile(path, new Uint8Array(file.buffer))
-      } catch (e) {
+      } catch {
         throw new InternalServerErrorException(
           'An error happened while saving the file',
         )
