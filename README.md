@@ -27,12 +27,12 @@ Below you will find the Environment Variables that are required to run the CDN. 
 `ACCESS_TOKEN`=The password which provides an abilito to upload files to the CDN.
 
 #### Misc
+
 `API_ORIGINS`=A list of allowed origins. Leave empty for all origins.\
-`USE_NEW_RELIC`=A flag which defines if New Relic should be used. Leave empty to disable New Relic.\
-`NEW_RELIC_LICENSE_KEY`=New Relic licence key.\
 `MAX_FILE_SIZE`=The maximum upload file size in bytes. Default value is 10MB.\
 `UPLOAD_PATH`=File upload path. If not specified, the `cdn_files` folder will be created in the project's root directory.
 
 ## Donate
+
 You can support the project by donating us at https://ko-fi.com/andriir \
 We can only run our services by once again asking for your financial support!

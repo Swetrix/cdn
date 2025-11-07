@@ -1,5 +1,14 @@
 import {
-  Controller, Post, UseInterceptors, UploadedFile, Delete, Body, HttpCode, Get, Param, UploadedFiles,
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  Delete,
+  Body,
+  HttpCode,
+  Get,
+  Param,
+  UploadedFiles,
 } from '@nestjs/common'
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 import { ApiTags } from '@nestjs/swagger'
@@ -13,9 +22,7 @@ import { FilesUploadDTO } from './dto/files-upload.dto'
 @ApiTags('File')
 @Controller('file')
 export class FileController {
-  constructor(
-    private readonly fileService: FileService,
-  ) {}
+  constructor(private readonly fileService: FileService) {}
 
   @Get('/:id')
   getFile(@Param('id') id: string) {
@@ -24,7 +31,10 @@ export class FileController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file', multerOptions))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: FileUploadDTO) {
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: FileUploadDTO,
+  ) {
     const { token } = body
     this.fileService.verifyAuth(token)
     return await this.fileService.saveFile(file)
@@ -32,7 +42,10 @@ export class FileController {
 
   @Post('multiple')
   @UseInterceptors(FilesInterceptor('files', 7, multerOptions))
-  async uploadMultipleFiles(@UploadedFiles() files: Express.Multer.File[], @Body() body: FilesUploadDTO) {
+  async uploadMultipleFiles(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() body: FilesUploadDTO,
+  ) {
     const { token } = body
     this.fileService.verifyAuth(token)
     return await this.fileService.saveMultipleFiles(files)

@@ -33,7 +33,6 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-package-lock.json
 .env
 pnpm-lock.yaml
 cdn_files/*

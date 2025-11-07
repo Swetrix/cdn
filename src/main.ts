@@ -2,9 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
-import { isNewRelicEnabled } from './common/constants'
 import { AppModule } from './app.module'
-import { NewrelicInterceptor } from './common/interceptors/newrelic.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -20,17 +18,13 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document)
   }
 
-  if (isNewRelicEnabled && process.env.NODE_ENV !== 'development') {
-    app.useGlobalInterceptors(new NewrelicInterceptor())
-  }
-
   app.use(async (req, res, next) => {
     res.header(
       'Cross-Origin-Embedder-Policy',
       "require-corp; report-to='default'",
     )
-    res.header('Cross-Origin-Opener-Policy', "same-site; report-to='default'")
-    res.header('Cross-Origin-Resource-Policy', 'same-site')
+    res.header('Cross-Origin-Opener-Policy', "same-origin; report-to='default'")
+    res.header('Cross-Origin-Resource-Policy', 'cross-origin')
     res.header('Permissions-Policy', 'interest-cohort=()')
     res.header('Referrer-Policy', 'strict-origin-when-cross-origin')
     res.header('X-Frame-Options', 'DENY')
@@ -47,6 +41,6 @@ async function bootstrap() {
     next()
   })
 
-  await app.listen(5006)
+  await app.listen(process.env.PORT || 5006)
 }
 bootstrap()
