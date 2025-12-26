@@ -8,7 +8,7 @@
     const token = 'test12345'
   </script>
   <script type="application/javascript">
-    function sendFile(file) {
+    function sendFile(file, filename) {
       const xhr = new XMLHttpRequest()
       const fd = new FormData()
 
@@ -20,6 +20,9 @@
       }
       fd.append('file', file)
       fd.append('token', token)
+      if (filename) {
+        fd.append('filename', filename)
+      }
       xhr.send(fd)
     }
 
@@ -31,29 +34,24 @@
         },
         body: JSON.stringify({
           token,
-          filename: document.getElementById('filename').value
+          filename: document.getElementById('deleteFilename').value
         })
       })
       .then(response => response.json())
       .then(console.log)
     }
 
-    window.onload = () => {
-      const dropzone = document.getElementById('dropzone')
-      dropzone.ondragover = dropzone.ondragenter = (event) => {
-        event.stopPropagation()
-        event.preventDefault()
+    function uploadFile() {
+      const fileInput = document.getElementById('fileInput')
+      const filename = document.getElementById('filename').value
+      
+      if (fileInput.files.length === 0) {
+        alert('Please select a file to upload')
+        return
       }
-
-      dropzone.ondrop = (event) => {
-        event.stopPropagation()
-        event.preventDefault()
-
-        const filesArray = event.dataTransfer.files
-        for (let i = 0; i < filesArray.length; i++) {
-          sendFile(filesArray[i])
-        }
-      }
+      
+      const file = fileInput.files[0]
+      sendFile(file, filename)
     }
   </script>
   <style>
@@ -66,13 +64,15 @@
 <body>
   <div>
     <h2>Upload file test</h2>
-    <div id="dropzone" style="width:500px; height:300px; border:1px dotted grey">
-      Drag & drop your file here
-    </div>
+    <input type="text" id="filename" placeholder="Enter the filename to upload (optional)">
+    <br><br>
+    <input type="file" id="fileInput">
+    <br><br>
+    <input type="button" value="Upload" onclick="uploadFile()">
   </div>
   <div style="margin-top: 30px">
     <h2>Delete file test</h2>
-    <input type="text" id="filename" placeholder="Enter the filename to delete">
+    <input type="text" id="deleteFilename" placeholder="Enter the filename to delete">
     <input type="button" value="Delete" onclick="deleteFile()">
   </div>
 </body>
